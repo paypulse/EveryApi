@@ -1,13 +1,13 @@
-package com.example.everyapi;
+package com.example.grpc_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EveryApiApplication {
+public class GRpcApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EveryApiApplication.class, args);
+        SpringApplication.run(GRpcApiApplication.class, args);
     }
 
 }

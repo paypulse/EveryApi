@@ -6,43 +6,87 @@ plugins {
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-
-java {
+//모든 프로젝트에 적용
+allprojects{
+    group = 'com.example'
+    version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '17'
-}
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    repositories {
+        mavenCentral()
     }
 }
 
-repositories {
-    mavenCentral()
+dependencies {
+    implementation 'org.testng:testng:7.1.0'
 }
 
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
+
+//서브 프로젝트들 전체 적용
+subprojects{
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+//서브 모듈 공통 dependency
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        compileOnly 'org.projectlombok:lombok'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+        implementation 'io.springfox:springfox-swagger2:2.9.2'
+        implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    }
+
+    tasks.named('test') {
+        outputs.dir snippetsDir
+        useJUnitPlatform()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+
+
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+    }
+
+//    tasks.named('asciidoctor') {
+//        inputs.dir snippetsDir
+//        dependsOn test
+//    }
+
 }
 
+//main: EveryApi dependency
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 }
 
-tasks.named('test') {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
-}
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
-}
+
+
+
+
+
+
+
+
